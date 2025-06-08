@@ -1,31 +1,15 @@
-// Initialiser la carte
-var map = L.map('map').setView([37.8, -96], 5);
+// Initialisation de la carte
+var map = L.map('map').setView([46.5, 2], 6);
 
-// Fond de carte
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Liste des étapes
+// Variables
 var etapes = [];
 var routeLine = null;
 var routePopup = null;
-
-// Fonction pour actualiser l'affichage des étapes
-function updateEtapesList() {
-    const list = document.getElementById('etapes-list');
-    list.innerHTML = '';
-
-    etapes.forEach((etape, index) => {
-        const li = document.createElement('li');
-        li.className = 'etape';
-        li.innerHTML = `${etape.name} <button class="supprimer" onclick="removeEtape(${index})">🗑️</button>`;
-        list.appendChild(li);
-    });
-
-    calculateRoute();
-}
 
 // Ajouter une étape
 function addEtape(lat, lon, name) {
@@ -55,7 +39,22 @@ document.getElementById('reset').addEventListener('click', () => {
     }
 });
 
-// Sauvegarde Roadtrip
+// Mettre à jour liste étapes + recalculer itinéraire
+function updateEtapesList() {
+    const list = document.getElementById('etapes-list');
+    list.innerHTML = '';
+
+    etapes.forEach((etape, index) => {
+        const li = document.createElement('li');
+        li.className = 'etape';
+        li.innerHTML = `${etape.name} <button class="supprimer" onclick="removeEtape(${index})">🗑️</button>`;
+        list.appendChild(li);
+    });
+
+    calculateRoute();
+}
+
+// Sauvegarder Roadtrip
 document.getElementById('save-roadtrip').addEventListener('click', () => {
     const json = JSON.stringify(etapes, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
@@ -68,7 +67,7 @@ document.getElementById('save-roadtrip').addEventListener('click', () => {
     URL.revokeObjectURL(url);
 });
 
-// Chargement Roadtrip
+// Charger Roadtrip
 document.getElementById('load-roadtrip-button').addEventListener('click', () => {
     document.getElementById('load-roadtrip').click();
 });
@@ -90,7 +89,7 @@ document.getElementById('load-roadtrip').addEventListener('change', (event) => {
     reader.readAsText(file);
 });
 
-// Clic sur la carte pour ajouter une étape
+// Clic sur la carte → ajouter une étape
 map.on('click', function(e) {
     const name = prompt('Nom de l\'étape :');
     if (name) {
@@ -98,10 +97,13 @@ map.on('click', function(e) {
     }
 });
 
-// Calcul de l'itinéraire (OpenRouteService)
+// Clé API ORS et OpenCage
+const apiKeyORS = '5b3ce3597851110001cf6248d5c0879a1b0640caab762e653170a8f5';
+const apiKeyOpenCage = '62fab8999c0f444d9ab79076aead5a15';
+
+// Calculer l'itinéraire
 function calculateRoute() {
     if (etapes.length < 2) {
-        // Pas assez d’étapes pour tracer une route
         if (routeLine) {
             map.removeLayer(routeLine);
             routeLine = null;
@@ -113,7 +115,6 @@ function calculateRoute() {
         return;
     }
 
-    const apiKey = '5b3ce3597851110001cf6248xxxxxxxxxxxxxxxxxxxxxxxx'; // 🔑 Mets ta clé OpenRouteService ici !
     const url = 'https://api.openrouteservice.org/v2/directions/driving-car/geojson';
 
     const body = {
@@ -123,7 +124,7 @@ function calculateRoute() {
     fetch(url, {
         method: 'POST',
         headers: {
-            'Authorization': apiKey,
+            'Authorization': apiKeyORS,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
@@ -132,16 +133,13 @@ function calculateRoute() {
     .then(data => {
         const coords = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
 
-        // Supprimer ancienne route
         if (routeLine) {
             map.removeLayer(routeLine);
         }
 
-        // Afficher nouvelle route
         routeLine = L.polyline(coords, { color: 'blue', weight: 5 }).addTo(map);
         map.fitBounds(routeLine.getBounds());
 
-        // Afficher résumé
         const summary = data.features[0].properties.summary;
         const distanceKm = (summary.distance / 1000).toFixed(1);
         const dureeMin = Math.round(summary.duration / 60);
@@ -151,7 +149,6 @@ function calculateRoute() {
             <p>Durée estimée : ${dureeMin} min</p>
         `;
 
-        // Afficher détails des segments
         const segments = data.features[0].properties.segments[0].steps;
         document.getElementById('details-segments').innerHTML = segments.map(step => `
             <p>${step.instruction} - ${step.distance.toFixed(0)} m</p>
@@ -160,7 +157,32 @@ function calculateRoute() {
     .catch(err => console.error('Erreur API ORS:', err));
 }
 
-// Chargement des POI
+// Recherche ville
+document.getElementById('search').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        const query = this.value;
+        if (query) {
+            fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(query)}&key=${apiKeyOpenCage}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.results.length > 0) {
+                    const result = data.results[0];
+                    const lat = result.geometry.lat;
+                    const lon = result.geometry.lng;
+                    const name = result.formatted;
+
+                    addEtape(lat, lon, name);
+                    map.setView([lat, lon], 10);
+                } else {
+                    alert('Aucun résultat trouvé.');
+                }
+            })
+            .catch(err => console.error('Erreur API OpenCage:', err));
+        }
+    }
+});
+
+// POI
 fetch('poi.geojson')
     .then(response => response.json())
     .then(data => {
