@@ -138,7 +138,7 @@ document.getElementById('toggle-details').addEventListener('click', () => {
     }
 });
 
-// Charger les POI
+// ✅ Charger les POI (National Parks + Monuments + Scenic Points)
 fetch('poi_nationalparks.geojson')
     .then(response => response.json())
     .then(poiData => {
@@ -154,3 +154,4 @@ fetch('poi_nationalparks.geojson')
             }
         }).addTo(map);
     });
+
