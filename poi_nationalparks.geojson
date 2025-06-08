@@ -1,0 +1,61 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Yellowstone National Park" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -110.5885, 44.4280 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Grand Canyon National Park" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -112.1401, 36.0544 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Yosemite National Park" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -119.5383, 37.8651 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Zion National Park" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -113.0263, 37.2982 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Bryce Canyon National Park" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -112.1871, 37.5930 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Arches National Park" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -109.5925, 38.7331 ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Everglades National Park" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ -80.9336, 25.2866 ]
+      }
+    }
+  ]
+}

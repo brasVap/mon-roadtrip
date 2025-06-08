@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <title>Mon Road Trip - Portugal</title>
+
+    <!-- CSS Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    
+    <!-- Awesomplete -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
+    
+    <!-- Ton style -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- ✅ Fix CSS PRO pour la bulle Awesomplete -->
+    <style>
+        .awesomplete {
+            z-index: 10000 !important;
+        }
+        .awesomplete ul {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #ccc !important;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1) !important;
+            z-index: 10000 !important;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌍 Mon Road Trip</h1>
+        <div id="controls">
+            <input id="search" class="awesomplete" placeholder="Rechercher un lieu..." />
+            <button id="reset">Réinitialiser</button>
+        </div>
+    </header>
+
+    <div id="main">
+        <aside>
+            <h2>Étapes</h2>
+            <ul id="etapes-list"></ul>
+
+            <div id="itineraire-info" style="margin-top: 20px; font-weight: bold;"></div>
+
+            <button id="toggle-details" style="margin-top: 10px;">Afficher les détails</button>
+
+            <div id="details-segments" style="display: none; margin-top: 10px; font-size: 14px;"></div>
+        </aside>
+
+        <div id="map"></div>
+    </div>
+
+    <!-- JS Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Awesomplete -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+
+    <!-- SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    <!-- Ton JS -->
+    <script src="app.js"></script>
+</body>
+</html>
