@@ -98,11 +98,66 @@ map.on('click', function(e) {
     }
 });
 
-// --- À compléter : calcul de route (placeholder pour l'instant)
+// Calcul de l'itinéraire (OpenRouteService)
 function calculateRoute() {
-    // Ici tu mettras ton code de calcul d'itinéraire
-    // Exemple : appel API OpenRouteService
-    console.log('Calcul de l\'itinéraire avec', etapes.length, 'étapes');
+    if (etapes.length < 2) {
+        // Pas assez d’étapes pour tracer une route
+        if (routeLine) {
+            map.removeLayer(routeLine);
+            routeLine = null;
+        }
+
+        document.getElementById('itineraire-info').innerHTML = '';
+        document.getElementById('details-segments').innerHTML = '';
+
+        return;
+    }
+
+    const apiKey = 'TON_API_KEY_ORS'; // 🔑 Mets ta clé OpenRouteService ici !
+    const url = 'https://api.openrouteservice.org/v2/directions/driving-car/geojson';
+
+    const body = {
+        coordinates: etapes.map(etape => [etape.lon, etape.lat])
+    };
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': apiKey,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    })
+    .then(response => response.json())
+    .then(data => {
+        const coords = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
+
+        // Supprimer ancienne route
+        if (routeLine) {
+            map.removeLayer(routeLine);
+        }
+
+        // Afficher nouvelle route
+        routeLine = L.polyline(coords, { color: 'blue', weight: 5 }).addTo(map);
+        map.fitBounds(routeLine.getBounds());
+
+        // Afficher résumé
+        const summary = data.features[0].properties.summary;
+        const distanceKm = (summary.distance / 1000).toFixed(1);
+        const dureeMin = Math.round(summary.duration / 60);
+
+        document.getElementById('itineraire-info').innerHTML = `
+            <p>Distance totale : ${distanceKm} km</p>
+            <p>Durée estimée : ${dureeMin} min</p>
+        `;
+
+        // Afficher détails des segments
+        const segments = data.features[0].properties.segments[0].steps;
+        document.getElementById('details-segments').innerHTML = segments.map(step => `
+            <p>${step.instruction} - ${step.distance.toFixed(0)} m</p>
+        `).join('');
+    })
+    .catch(err => console.error('Erreur API ORS:', err));
 }
 
 // Chargement des POI
