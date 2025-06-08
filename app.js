@@ -157,47 +157,6 @@ function calculateRoute() {
     .catch(err => console.error('Erreur API ORS:', err));
 }
 
-// Recherche ville
-document.getElementById('search').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        const query = this.value;
-        if (query) {
-            fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(query)}&key=${apiKeyOpenCage}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.results.length > 0) {
-                    const result = data.results[0];
-                    const lat = result.geometry.lat;
-                    const lon = result.geometry.lng;
-                    const name = result.formatted;
-
-                    addEtape(lat, lon, name);
-                    map.setView([lat, lon], 10);
-                } else {
-                    alert('Aucun résultat trouvé.');
-                }
-            })
-            .catch(err => console.error('Erreur API OpenCage:', err));
-        }
-    }
-});
-
-// POI
-fetch('poi.geojson')
-    .then(response => response.json())
-    .then(data => {
-        L.geoJSON(data, {
-            pointToLayer: (feature, latlng) => L.marker(latlng).bindPopup(feature.properties.name)
-        }).addTo(map);
-    });
-
-fetch('poi_nationalparks.geojson')
-    .then(response => response.json())
-    .then(data => {
-        L.geoJSON(data, {
-            pointToLayer: (feature, latlng) => L.marker(latlng).bindPopup(feature.properties.name)
-        }).addTo(map);
-    });
 // Recherche ville avec Autocomplete (Awesomplete)
 var searchInput = document.getElementById('search');
 var awesomplete = new Awesomplete(searchInput, {
@@ -206,7 +165,6 @@ var awesomplete = new Awesomplete(searchInput, {
     autoFirst: true
 });
 
-// Quand l'utilisateur tape → chercher les lieux
 searchInput.addEventListener('input', function() {
     const query = this.value;
     if (query.length < 2) return;
@@ -226,7 +184,6 @@ searchInput.addEventListener('input', function() {
 searchInput.addEventListener('awesomplete-selectcomplete', function(event) {
     const selectedPlace = event.text.value || event.text;
 
-    // On refait une requête pour récupérer les coordonnées
     fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(selectedPlace)}&key=${apiKeyOpenCage}`)
     .then(response => response.json())
     .then(data => {
@@ -243,3 +200,19 @@ searchInput.addEventListener('awesomplete-selectcomplete', function(event) {
     .catch(err => console.error('Erreur API OpenCage:', err));
 });
 
+// POI
+fetch('poi.geojson')
+    .then(response => response.json())
+    .then(data => {
+        L.geoJSON(data, {
+            pointToLayer: (feature, latlng) => L.marker(latlng).bindPopup(feature.properties.name)
+        }).addTo(map);
+    });
+
+fetch('poi_nationalparks.geojson')
+    .then(response => response.json())
+    .then(data => {
+        L.geoJSON(data, {
+            pointToLayer: (feature, latlng) => L.marker(latlng).bindPopup(feature.properties.name)
+        }).addTo(map);
+    });
