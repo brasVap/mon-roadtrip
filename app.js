@@ -113,7 +113,7 @@ function calculateRoute() {
         return;
     }
 
-    const apiKey = 'TON_API_KEY_ORS'; // 🔑 Mets ta clé OpenRouteService ici !
+    const apiKey = '5b3ce3597851110001cf6248xxxxxxxxxxxxxxxxxxxxxxxx'; // 🔑 Mets ta clé OpenRouteService ici !
     const url = 'https://api.openrouteservice.org/v2/directions/driving-car/geojson';
 
     const body = {
