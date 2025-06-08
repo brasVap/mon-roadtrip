@@ -2,6 +2,7 @@ body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f4f9;
+    display: flex;
 }
 
 header {
@@ -11,8 +12,6 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: relative; /* 👈 AJOUTÉ */
-    z-index: 10; /* 👈 AJOUTÉ */
 }
 
 header h1 {
@@ -78,6 +77,7 @@ aside h2 {
 
 #map {
     flex-grow: 1;
+    height: 100vh;
 }
 
 #etapes-list li button.supprimer {
@@ -94,8 +94,34 @@ aside h2 {
 #etapes-list li button.supprimer:hover {
     background-color: #cc0000;
 }
-.awesomplete {
-    z-index: 10000; /* pour que la liste passe au-dessus de la carte */
-    position: absolute; /* important pour qu'elle se détache correctement */
+
+/* Ajout des styles migrés de index.html */
+
+#sidebar {
+    width: 320px;
+    background: #f5f5f5;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    height: 100vh;
 }
 
+.etape {
+    background: #fff;
+    border: 1px solid #ddd;
+    margin: 5px 0;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+}
+
+.supprimer {
+    background: red;
+    color: white;
+    border: none;
+    padding: 4px 6px;
+    cursor: pointer;
+    border-radius: 3px;
+}
