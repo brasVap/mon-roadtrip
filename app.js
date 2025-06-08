@@ -173,7 +173,10 @@ searchInput.addEventListener('input', function() {
     .then(response => response.json())
     .then(data => {
         if (data.results.length > 0) {
-            const list = data.results.map(result => result.formatted);
+            const list = data.results.map(result => {
+                const country = result.components.country || '';
+                return `${result.formatted} (${country})`;
+            });
             awesomplete.list = list;
         }
     })
