@@ -11,6 +11,8 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative; /* 👈 AJOUTÉ */
+    z-index: 10; /* 👈 AJOUTÉ */
 }
 
 header h1 {
