@@ -107,7 +107,7 @@ searchInput.addEventListener('input', function () {
         .then(response => response.json())
         .then(data => {
             const suggestions = data.results.map(result => ({
-                label: `${result.components.city || result.components.town || result.components.village || result.formatted}`,
+                label: `${result.components.city || result.components.town || result.components.village || ''}, ${result.components.state || ''}, ${result.components.country || ''}`,
                 value: result.formatted,
                 lat: result.geometry.lat,
                 lon: result.geometry.lng
