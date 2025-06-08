@@ -4,60 +4,47 @@
     <meta charset="utf-8">
     <title>Mon Road Trip</title>
 
-    <!-- ✅ CSS Leaflet -->
+    <!-- ✅ CSS Leaflet (sans integrity) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- ✅ CSS Awesomplete -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css">
 
-    <!-- ✅ Ton styles.css -->
+    <!-- ✅ Ton styles.css nettoyé -->
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-    <!-- ✅ Barre de contrôle -->
-    <header>
+    <div id="sidebar">
         <h1>🌍 Mon Road Trip</h1>
-        <div id="controls">
-            <input id="search" type="text" placeholder="Rechercher un lieu...">
-            <button id="reset">Réinitialiser</button>
-        </div>
-    </header>
 
-    <!-- ✅ Contenu principal -->
-    <div id="main">
-        <!-- ✅ Sidebar -->
-        <aside>
-            <h2>Étapes</h2>
-            <ul id="etapes-list"></ul>
+        <!-- ✅ Barre de recherche -->
+        <input id="search" type="text" placeholder="Rechercher un lieu...">
+        <button id="reset">Réinitialiser</button>
 
-            <!-- ✅ Fichier Roadtrip -->
-            <h2>📂 Fichier Roadtrip</h2>
-            <button id="save-roadtrip">💾 Sauvegarder Roadtrip</button>
-            <input type="file" id="load-roadtrip" style="display: none;">
-            <button id="load-roadtrip-button">📂 Charger Roadtrip</button>
+        <!-- ✅ Liste des étapes -->
+        <h2>Étapes</h2>
+        <ul id="etapes-list"></ul>
 
-            <!-- ✅ Itinéraire -->
-            <h2>Itinéraire</h2>
-            <div id="itineraire-info"></div>
+        <!-- ✅ Itinéraire -->
+        <div id="itineraire-info"></div>
 
-            <!-- ✅ Détails -->
-            <button id="toggle-details">Afficher les détails</button>
-            <div id="details-segments" style="display: none;"></div>
-        </aside>
-
-        <!-- ✅ Carte -->
-        <div id="map"></div>
+        <!-- ✅ Détails -->
+        <button id="toggle-details">Afficher les détails</button>
+        <div id="details-segments" style="display: none;"></div>
     </div>
 
-    <!-- ✅ JS Leaflet -->
+    <!-- ✅ Carte -->
+    <div id="map"></div>
+
+    <!-- ✅ JS Leaflet (sans integrity) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- ✅ JS Awesomplete -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
 
-    <!-- ✅ JS Sortable (pour plus tard si besoin) -->
+    <!-- ✅ JS Sortable (pour déplacer les étapes) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 
     <!-- ✅ Ton app.js -->
