@@ -1,221 +1,186 @@
-// Initialisation de la carte
-var map = L.map('map').setView([46.5, 2], 6);
+// app.js complet : version refactorisée + updateItineraire() avec TA clé ORS
 
+// Initialisation de la carte
+const map = L.map('map').setView([43.6, 3.9], 6);
+
+// Fond de carte OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Variables
-var etapes = [];
-var routeLine = null;
-var routePopup = null;
+// Variables globales
+const etapes = [];
+const etapesList = document.getElementById('etapes-list');
+const searchInput = document.getElementById('search');
+const resetButton = document.getElementById('reset');
+const poiMarkers = L.layerGroup().addTo(map);
 
-// Ajouter une étape
-function addEtape(lat, lon, name) {
-    etapes.push({ lat, lon, name });
-    updateEtapesList();
+// Fonction utilitaire pour charger des POI
+function loadPOI(url) {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            L.geoJSON(data, {
+                pointToLayer: (feature, latlng) => {
+                    return L.marker(latlng)
+                        .bindPopup(feature.properties.name || 'POI');
+                }
+            }).addTo(poiMarkers);
+        })
+        .catch(err => console.error(`Erreur chargement ${url}:`, err));
 }
 
-// Supprimer une étape
-function removeEtape(index) {
-    etapes.splice(index, 1);
-    updateEtapesList();
+// Fonction reset POI
+function resetPOI() {
+    poiMarkers.clearLayers();
+    loadPOI('poi.geojson');
+    loadPOI('poi_nationalparks.geojson');
 }
 
-// Réinitialiser
-document.getElementById('reset').addEventListener('click', () => {
-    etapes = [];
-    updateEtapesList();
+// Chargement initial des POI
+resetPOI();
 
-    if (routeLine) {
-        map.removeLayer(routeLine);
-        routeLine = null;
-    }
-
-    if (routePopup) {
-        map.closePopup(routePopup);
-        routePopup = null;
-    }
-});
-
-// Mettre à jour liste étapes + recalculer itinéraire
+// Fonction pour mettre à jour la liste des étapes
 function updateEtapesList() {
-    const list = document.getElementById('etapes-list');
-    list.innerHTML = '';
-
+    etapesList.innerHTML = '';
     etapes.forEach((etape, index) => {
         const li = document.createElement('li');
         li.className = 'etape';
-        li.innerHTML = `${etape.name} <button class="supprimer" onclick="removeEtape(${index})">🗑️</button>`;
-        list.appendChild(li);
-    });
+        li.textContent = etape.name;
 
-    calculateRoute();
+        const btn = document.createElement('button');
+        btn.textContent = 'Supprimer';
+        btn.className = 'supprimer';
+        btn.onclick = () => {
+            etapes.splice(index, 1);
+            updateEtapesList();
+            updateItineraire();
+        };
+
+        li.appendChild(btn);
+        etapesList.appendChild(li);
+    });
 }
 
-// Sauvegarder Roadtrip
-document.getElementById('save-roadtrip').addEventListener('click', () => {
-    const json = JSON.stringify(etapes, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+// updateItineraire() avec TA clé ORS
+const ORS_API_KEY = '5b3ce3597851110001cf6248d5c0879a1b0640caab762e653170a8f5';
+let itineraireLayer = null;
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'roadtrip.json';
-    a.click();
-    URL.revokeObjectURL(url);
-});
-
-// Charger Roadtrip
-document.getElementById('load-roadtrip-button').addEventListener('click', () => {
-    document.getElementById('load-roadtrip').click();
-});
-
-document.getElementById('load-roadtrip').addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const loadedEtapes = JSON.parse(e.target.result);
-            etapes = loadedEtapes;
-            updateEtapesList();
-        } catch (error) {
-            alert('Erreur lors du chargement du fichier : ' + error.message);
-        }
-    };
-    reader.readAsText(file);
-});
-
-// Clic sur la carte → ajouter une étape
-map.on('click', function(e) {
-    const name = prompt('Nom de l\'étape :');
-    if (name) {
-        addEtape(e.latlng.lat, e.latlng.lng, name);
-    }
-});
-
-// Clé API ORS et OpenCage
-const apiKeyORS = '5b3ce3597851110001cf6248d5c0879a1b0640caab762e653170a8f5';
-const apiKeyOpenCage = '62fab8999c0f444d9ab79076aead5a15';
-
-// Calculer l'itinéraire
-function calculateRoute() {
+function updateItineraire() {
     if (etapes.length < 2) {
-        if (routeLine) {
-            map.removeLayer(routeLine);
-            routeLine = null;
+        document.getElementById('itineraire-info').innerHTML = '<p>Ajoutez au moins 2 étapes pour calculer l’itinéraire.</p>';
+        if (itineraireLayer) {
+            map.removeLayer(itineraireLayer);
+            itineraireLayer = null;
         }
-
-        document.getElementById('itineraire-info').innerHTML = '';
-        document.getElementById('details-segments').innerHTML = '';
-
         return;
     }
 
-    const url = 'https://api.openrouteservice.org/v2/directions/driving-car/geojson';
+    const coordinates = etapes.map(etape => [etape.lon, etape.lat]);
 
-    const body = {
-        coordinates: etapes.map(etape => [etape.lon, etape.lat])
-    };
-
-    fetch(url, {
+    fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
         method: 'POST',
         headers: {
-            'Authorization': apiKeyORS,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': ORS_API_KEY
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify({ coordinates })
     })
     .then(response => response.json())
     .then(data => {
-        const coords = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
-
-        if (routeLine) {
-            map.removeLayer(routeLine);
+        if (itineraireLayer) {
+            map.removeLayer(itineraireLayer);
         }
 
-        routeLine = L.polyline(coords, { color: 'blue', weight: 5 }).addTo(map);
-        map.fitBounds(routeLine.getBounds());
+        itineraireLayer = L.geoJSON(data, {
+            style: { color: 'blue', weight: 5 }
+        }).addTo(map);
 
-        const summary = data.features[0].properties.summary;
-        const distanceKm = (summary.distance / 1000).toFixed(1);
-        const dureeMin = Math.round(summary.duration / 60);
+        let distanceKm = 0;
+        let dureeMin = 0;
+
+        data.features[0].properties.segments.forEach(segment => {
+            distanceKm += segment.distance / 1000;
+            dureeMin += segment.duration / 60;
+        });
 
         document.getElementById('itineraire-info').innerHTML = `
-            <p>Distance totale : ${distanceKm} km</p>
-            <p>Durée estimée : ${dureeMin} min</p>
+            <p><strong>Distance totale :</strong> ${distanceKm.toFixed(1)} km</p>
+            <p><strong>Durée totale :</strong> ${Math.round(dureeMin)} min</p>
+            <h3>Détail par segment :</h3>
+            <ul>
+                ${data.features[0].properties.segments.map((segment, i) => `
+                    <li>Segment ${i + 1} : ${(segment.distance / 1000).toFixed(1)} km, ${Math.round(segment.duration / 60)} min</li>
+                `).join('')}
+            </ul>
         `;
-
-        const segments = data.features[0].properties.segments[0].steps;
-        document.getElementById('details-segments').innerHTML = segments.map(step => `
-            <p>${step.instruction} - ${step.distance.toFixed(0)} m</p>
-        `).join('');
     })
-    .catch(err => console.error('Erreur API ORS:', err));
+    .catch(err => {
+        console.error('Erreur calcul itinéraire:', err);
+        document.getElementById('itineraire-info').innerHTML = '<p>Erreur lors du calcul de l’itinéraire.</p>';
+    });
 }
 
-// Recherche ville avec Autocomplete (Awesomplete)
-var searchInput = document.getElementById('search');
-var awesomplete = new Awesomplete(searchInput, {
-    minChars: 2,
-    maxItems: 5,
-    autoFirst: true
+// Gestion recherche + ajout à la liste avec debounce
+let searchTimeout;
+searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const query = searchInput.value.trim();
+            if (query.length > 0) {
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(results => {
+                        if (results.length > 0) {
+                            const place = results[0];
+                            const lat = parseFloat(place.lat);
+                            const lon = parseFloat(place.lon);
+
+                            const etape = {
+                                name: place.display_name,
+                                lat,
+                                lon
+                            };
+
+                            etapes.push(etape);
+                            updateEtapesList();
+                            updateItineraire();
+
+                            map.setView([lat, lon], 12);
+                            L.marker([lat, lon]).addTo(map).bindPopup(place.display_name).openPopup();
+
+                            searchInput.value = '';
+                        } else {
+                            alert('Lieu non trouvé.');
+                        }
+                    })
+                    .catch(err => console.error('Erreur recherche Nominatim:', err));
+            }
+        }, 300);
+    }
 });
 
-searchInput.addEventListener('input', function() {
-    const query = this.value;
-    if (query.length < 2) return;
-
-    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(query)}&key=${apiKeyOpenCage}&limit=5`)
-    .then(response => response.json())
-    .then(data => {
-        if (data.results.length > 0) {
-            const list = data.results.map(result => {
-                const country = result.components.country || '';
-                return `${result.formatted} (${country})`;
-            });
-            awesomplete.list = list;
-        }
-    })
-    .catch(err => console.error('Erreur API OpenCage:', err));
+// Bouton reset
+resetButton.addEventListener('click', function() {
+    etapes.length = 0;
+    updateEtapesList();
+    updateItineraire();
+    map.setView([43.6, 3.9], 6);
+    resetPOI();
 });
 
-// Quand l'utilisateur sélectionne une suggestion → ajouter l'étape
-searchInput.addEventListener('awesomplete-selectcomplete', function(event) {
-    const selectedPlace = event.text.value || event.text;
-
-    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(selectedPlace)}&key=${apiKeyOpenCage}`)
-    .then(response => response.json())
-    .then(data => {
-        if (data.results.length > 0) {
-            const result = data.results[0];
-            const lat = result.geometry.lat;
-            const lon = result.geometry.lng;
-            const name = result.formatted;
-
-            addEtape(lat, lon, name);
-            map.setView([lat, lon], 10);
-        }
-    })
-    .catch(err => console.error('Erreur API OpenCage:', err));
+// Initialisation de Sortable pour la liste des étapes
+new Sortable(etapesList, {
+    animation: 150,
+    onEnd: () => {
+        const newOrder = [];
+        etapesList.querySelectorAll('li').forEach(li => {
+            const name = li.firstChild.textContent;
+            const etape = etapes.find(e => e.name === name);
+            if (etape) newOrder.push(etape);
+        });
+        etapes.splice(0, etapes.length, ...newOrder);
+        updateItineraire();
+    }
 });
-
-// POI
-fetch('poi.geojson')
-    .then(response => response.json())
-    .then(data => {
-        L.geoJSON(data, {
-            pointToLayer: (feature, latlng) => L.marker(latlng).bindPopup(feature.properties.name)
-        }).addTo(map);
-    });
-
-fetch('poi_nationalparks.geojson')
-    .then(response => response.json())
-    .then(data => {
-        L.geoJSON(data, {
-            pointToLayer: (feature, latlng) => L.marker(latlng).bindPopup(feature.properties.name)
-        }).addTo(map);
-    });
