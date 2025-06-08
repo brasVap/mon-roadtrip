@@ -4,103 +4,60 @@
     <meta charset="utf-8">
     <title>Mon Road Trip</title>
 
-    <!-- ✅ CSS Leaflet (sans integrity) -->
+    <!-- ✅ CSS Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- ✅ CSS Awesomplete -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css">
 
-    <!-- ✅ Style perso -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-        }
-        #sidebar {
-            width: 320px;
-            background: #f5f5f5;
-            padding: 15px;
-            box-sizing: border-box;
-            overflow-y: auto;
-            height: 100vh;
-        }
-        #map {
-            flex: 1;
-            height: 100vh;
-        }
-        .etape {
-            background: #fff;
-            border: 1px solid #ddd;
-            margin: 5px 0;
-            padding: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: grab;
-        }
-        .supprimer {
-            background: red;
-            color: white;
-            border: none;
-            padding: 4px 6px;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-        button {
-            margin: 5px 0;
-            padding: 8px 12px;
-            font-size: 14px;
-            cursor: pointer;
-            border-radius: 4px;
-            border: none;
-            background-color: #3498db;
-            color: white;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-    </style>
+    <!-- ✅ Ton styles.css -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-    <div id="sidebar">
+    <!-- ✅ Barre de contrôle -->
+    <header>
         <h1>🌍 Mon Road Trip</h1>
+        <div id="controls">
+            <input id="search" type="text" placeholder="Rechercher un lieu...">
+            <button id="reset">Réinitialiser</button>
+        </div>
+    </header>
 
-        <!-- ✅ Barre de recherche -->
-        <input id="search" type="text" placeholder="Rechercher un lieu...">
-        <button id="reset">Réinitialiser</button>
+    <!-- ✅ Contenu principal -->
+    <div id="main">
+        <!-- ✅ Sidebar -->
+        <aside>
+            <h2>Étapes</h2>
+            <ul id="etapes-list"></ul>
 
-        <!-- ✅ Liste des étapes -->
-        <h2>Étapes</h2>
-        <ul id="etapes-list"></ul>
+            <!-- ✅ Fichier Roadtrip -->
+            <h2>📂 Fichier Roadtrip</h2>
+            <button id="save-roadtrip">💾 Sauvegarder Roadtrip</button>
+            <input type="file" id="load-roadtrip" style="display: none;">
+            <button id="load-roadtrip-button">📂 Charger Roadtrip</button>
 
-        <!-- ✅ Sauvegarde / Chargement -->
-        <h2>📂 Fichier Roadtrip</h2>
-        <button id="save-roadtrip">💾 Sauvegarder Roadtrip</button>
-        <input type="file" id="load-roadtrip" style="display: none;">
-        <button id="load-roadtrip-button">📂 Charger Roadtrip</button>
+            <!-- ✅ Itinéraire -->
+            <h2>Itinéraire</h2>
+            <div id="itineraire-info"></div>
 
-        <!-- ✅ Itinéraire -->
-        <div id="itineraire-info"></div>
+            <!-- ✅ Détails -->
+            <button id="toggle-details">Afficher les détails</button>
+            <div id="details-segments" style="display: none;"></div>
+        </aside>
 
-        <!-- ✅ Détails -->
-        <button id="toggle-details">Afficher les détails</button>
-        <div id="details-segments" style="display: none;"></div>
+        <!-- ✅ Carte -->
+        <div id="map"></div>
     </div>
 
-    <!-- ✅ Carte -->
-    <div id="map"></div>
-
-    <!-- ✅ JS Leaflet (sans integrity) -->
+    <!-- ✅ JS Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- ✅ JS Awesomplete -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
 
-    <!-- ✅ JS Sortable (pour déplacer les étapes) -->
+    <!-- ✅ JS Sortable (pour plus tard) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 
     <!-- ✅ Ton app.js -->
