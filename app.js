@@ -154,4 +154,67 @@ fetch('poi_nationalparks.geojson')
             }
         }).addTo(map);
     });
+function addEtapeToList(name, lat, lng) {
+    const li = document.createElement('li');
+    li.textContent = name;
+    li.dataset.lat = lat;
+    li.dataset.lng = lng;
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Supprimer';
+    btn.className = 'supprimer';
+    btn.addEventListener('click', () => {
+        li.remove();
+        updateItineraire();
+    });
+
+    li.appendChild(btn);
+    document.getElementById('etapes-list').appendChild(li);
+}
+document.getElementById('save-roadtrip').addEventListener('click', () => {
+    const etapes = [];
+    document.querySelectorAll('#etapes-list li').forEach(li => {
+        const name = li.textContent.replace('Supprimer', '').trim();
+        const lat = li.dataset.lat;
+        const lng = li.dataset.lng;
+        etapes.push({ name, lat, lng });
+    });
+
+    const json = JSON.stringify(etapes, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'roadtrip.json';
+    a.click();
+    URL.revokeObjectURL(url);
+});
+document.getElementById('load-roadtrip-button').addEventListener('click', () => {
+    document.getElementById('load-roadtrip').click();
+});
+
+document.getElementById('load-roadtrip').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const etapes = JSON.parse(e.target.result);
+            document.getElementById('etapes-list').innerHTML = '';
+
+            etapes.forEach(etape => {
+                addEtapeToList(etape.name, etape.lat, etape.lng);
+            });
+
+            // 👉 Appelle la fonction de recalcul d'itinéraire si tu en as une :
+            updateItineraire();
+
+        } catch (error) {
+            alert('Erreur lors du chargement du fichier : ' + error.message);
+        }
+    };
+    reader.readAsText(file);
+});
 
