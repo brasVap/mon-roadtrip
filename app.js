@@ -16,12 +16,14 @@ var routePopup = null;
 function updateEtapesList() {
     const list = document.getElementById('etapes-list');
     list.innerHTML = '';
+
     etapes.forEach((etape, index) => {
         const li = document.createElement('li');
         li.className = 'etape';
         li.innerHTML = `${etape.name} <button class="supprimer" onclick="removeEtape(${index})">🗑️</button>`;
         list.appendChild(li);
     });
+
     calculateRoute();
 }
 
@@ -41,145 +43,20 @@ function removeEtape(index) {
 document.getElementById('reset').addEventListener('click', () => {
     etapes = [];
     updateEtapesList();
+
     if (routeLine) {
         map.removeLayer(routeLine);
         routeLine = null;
     }
+
     if (routePopup) {
         map.closePopup(routePopup);
         routePopup = null;
     }
 });
 
-// Calculer l'itinéraire
-function calculateRoute() {
-    if (etapes.length < 2) return;
-
-    const coordinates = etapes.map(e => [e.lon, e.lat]);
-
-    fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
-        method: 'POST',
-        headers: {
-            'Authorization': '5b3ce3597851110001cf6248d5c0879a1b0640caab762e653170a8f5',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            coordinates: coordinates
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (routeLine) map.removeLayer(routeLine);
-
-        routeLine = L.geoJSON(data, {
-            style: { color: 'red', weight: 5 }
-        }).addTo(map);
-
-        // Zoom sur l'itinéraire
-        map.fitBounds(routeLine.getBounds());
-
-        // Affichage distance + temps
-        const summary = data.features[0].properties.summary;
-        const distanceKm = (summary.distance / 1000).toFixed(1);
-        const durationMin = Math.round(summary.duration / 60);
-
-        const popupContent = `⏱️ ${Math.floor(durationMin / 60)} h ${durationMin % 60} min<br>🚗 ${distanceKm} km`;
-
-        if (routePopup) map.closePopup(routePopup);
-        routePopup = L.popup()
-            .setLatLng(routeLine.getBounds().getCenter())
-            .setContent(popupContent)
-            .openOn(map);
-    })
-    .catch(() => {
-        alert('Erreur lors du calcul de l\'itinéraire.');
-    });
-}
-
-// Recherche avec OpenCage
-var searchInput = document.getElementById('search');
-var awesomplete = new Awesomplete(searchInput);
-
-searchInput.addEventListener('input', function () {
-    if (this.value.length < 3) return;
-
-    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(this.value)}&key=62fab8999c0f444d9ab79076aead5a15&limit=5&countrycode=us`)
-        .then(response => response.json())
-        .then(data => {
-            const suggestions = data.results.map(result => ({
-                label: `${result.components.city || result.components.town || result.components.village || ''}, ${result.components.state || ''}, ${result.components.country || ''}`,
-                value: result.formatted,
-                lat: result.geometry.lat,
-                lon: result.geometry.lng
-            }));
-
-            awesomplete.list = suggestions.map(s => s.label);
-
-            awesomplete._suggestions = suggestions; // on garde pour sélectionner
-        });
-});
-
-searchInput.addEventListener('awesomplete-selectcomplete', function () {
-    const selected = awesomplete._suggestions.find(s => s.label === this.value);
-    if (selected) {
-        map.setView([selected.lat, selected.lon], 10);
-        addEtape(selected.lat, selected.lon, selected.value);
-        this.value = '';
-    }
-});
-
-// Afficher / cacher les détails
-document.getElementById('toggle-details').addEventListener('click', () => {
-    const details = document.getElementById('details-segments');
-    if (details.style.display === 'none') {
-        details.style.display = 'block';
-    } else {
-        details.style.display = 'none';
-    }
-});
-
-// ✅ Charger les POI (National Parks + Monuments + Scenic Points)
-fetch('poi_nationalparks.geojson')
-    .then(response => response.json())
-    .then(poiData => {
-        L.geoJSON(poiData, {
-            pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, {
-                    icon: L.icon({
-                        iconUrl: 'https://cdn-icons-png.flaticon.com/512/3448/3448610.png',
-                        iconSize: [25, 25],
-                        iconAnchor: [12, 24]
-                    })
-                }).bindPopup(`<b>${feature.properties.name}</b>`);
-            }
-        }).addTo(map);
-    });
-function addEtapeToList(name, lat, lng) {
-    const li = document.createElement('li');
-    li.textContent = name;
-    li.dataset.lat = lat;
-    li.dataset.lng = lng;
-
-    const btn = document.createElement('button');
-    btn.textContent = 'Supprimer';
-    btn.className = 'supprimer';
-    btn.addEventListener('click', () => {
-        li.remove();
-        updateItineraire();
-    });
-
-    li.appendChild(btn);
-    document.getElementById('etapes-list').appendChild(li);
-}
+// Sauvegarde Roadtrip
 document.getElementById('save-roadtrip').addEventListener('click', () => {
-    const etapes = [];
-    document.querySelectorAll('#etapes-list li').forEach(li => {
-        const name = li.textContent.replace('Supprimer', '').trim();
-        const lat = li.dataset.lat;
-        const lng = li.dataset.lng;
-        etapes.push({ name, lat, lng });
-    });
-
     const json = JSON.stringify(etapes, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -190,6 +67,8 @@ document.getElementById('save-roadtrip').addEventListener('click', () => {
     a.click();
     URL.revokeObjectURL(url);
 });
+
+// Chargement Roadtrip
 document.getElementById('load-roadtrip-button').addEventListener('click', () => {
     document.getElementById('load-roadtrip').click();
 });
@@ -201,16 +80,9 @@ document.getElementById('load-roadtrip').addEventListener('change', (event) => {
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
-            const etapes = JSON.parse(e.target.result);
-            document.getElementById('etapes-list').innerHTML = '';
-
-            etapes.forEach(etape => {
-                addEtapeToList(etape.name, etape.lat, etape.lng);
-            });
-
-            // 👉 Appelle la fonction de recalcul d'itinéraire si tu en as une :
-            updateItineraire();
-
+            const loadedEtapes = JSON.parse(e.target.result);
+            etapes = loadedEtapes;
+            updateEtapesList();
         } catch (error) {
             alert('Erreur lors du chargement du fichier : ' + error.message);
         }
@@ -218,3 +90,34 @@ document.getElementById('load-roadtrip').addEventListener('change', (event) => {
     reader.readAsText(file);
 });
 
+// Clic sur la carte pour ajouter une étape
+map.on('click', function(e) {
+    const name = prompt('Nom de l\'étape :');
+    if (name) {
+        addEtape(e.latlng.lat, e.latlng.lng, name);
+    }
+});
+
+// --- À compléter : calcul de route (placeholder pour l'instant)
+function calculateRoute() {
+    // Ici tu mettras ton code de calcul d'itinéraire
+    // Exemple : appel API OpenRouteService
+    console.log('Calcul de l\'itinéraire avec', etapes.length, 'étapes');
+}
+
+// Chargement des POI
+fetch('poi.geojson')
+    .then(response => response.json())
+    .then(data => {
+        L.geoJSON(data, {
+            pointToLayer: (feature, latlng) => L.marker(latlng).bindPopup(feature.properties.name)
+        }).addTo(map);
+    });
+
+fetch('poi_nationalparks.geojson')
+    .then(response => response.json())
+    .then(data => {
+        L.geoJSON(data, {
+            pointToLayer: (feature, latlng) => L.marker(latlng).bindPopup(feature.properties.name)
+        }).addTo(map);
+    });
