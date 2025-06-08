@@ -92,3 +92,8 @@ aside h2 {
 #etapes-list li button.supprimer:hover {
     background-color: #cc0000;
 }
+.awesomplete {
+    z-index: 10000; /* pour que la liste passe au-dessus de la carte */
+    position: absolute; /* important pour qu'elle se détache correctement */
+}
+
