@@ -1,8 +1,9 @@
 body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #eef1f5;
     display: flex;
+    height: 100vh;
 }
 
 header {
@@ -43,6 +44,25 @@ header h1 {
 
 #controls button:hover {
     background-color: #ff3b2e;
+}
+
+input, select, button {
+    font-size: 14px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #0066ff;
+    color: #fff;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #0044bb;
 }
 
 #main {
@@ -107,11 +127,12 @@ aside h2 {
 
 #sidebar {
     width: 320px;
-    background: #f5f5f5;
-    padding: 15px;
+    background: #fff;
+    padding: 20px;
     box-sizing: border-box;
     overflow-y: auto;
     height: 100vh;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
 }
 
 .etape {
@@ -123,15 +144,21 @@ aside h2 {
     justify-content: space-between;
     align-items: center;
     cursor: grab;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .supprimer {
-    background: red;
+    background: #ff4d4d;
     color: white;
     border: none;
     padding: 4px 6px;
     cursor: pointer;
     border-radius: 3px;
+}
+
+.supprimer:hover {
+    background: #d93636;
 }
 
 .day-nav {
@@ -152,4 +179,8 @@ aside h2 {
 #basemap-select {
     width: 100%;
     margin-bottom: 10px;
+}
+
+#toggle-poi {
+    width: 100%;
 }

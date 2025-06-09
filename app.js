@@ -34,12 +34,15 @@ const resetButton = document.getElementById('reset');
 const toggleBtn = document.getElementById('toggle-details');
 const detailsDiv = document.getElementById('details-segments');
 const shareBtn = document.getElementById('share-trip');
-const poiMarkers = L.layerGroup().addTo(map);
+const poiMarkers = L.layerGroup();
 const categoryFiltersDiv = document.getElementById('category-filters');
 const basemapSelect = document.getElementById('basemap-select');
+const poiToggleBtn = document.getElementById('toggle-poi');
 const categoryLayers = {};
 const categoriesSet = new Set();
 let autoOptimize = true;
+let poiVisible = true;
+if (poiVisible) poiMarkers.addTo(map);
 
 // Fonction utilitaire pour charger des POI
 function createCategoryCheckbox(cat) {
@@ -94,6 +97,9 @@ function resetPOI() {
     categoriesSet.clear();
     loadPOI('poi.geojson');
     loadPOI('poi_nationalparks.geojson');
+    if (poiVisible && !map.hasLayer(poiMarkers)) {
+        poiMarkers.addTo(map);
+    }
 }
 
 // Chargement initial des POI
@@ -126,7 +132,38 @@ function optimizeItinerary() {
         current = remaining.splice(best, 1)[0];
         optimized.push(current);
     }
+
+    // 2-opt improvement
+    let improved = true;
+    while (improved) {
+        improved = false;
+        for (let i = 1; i < optimized.length - 1; i++) {
+            for (let k = i + 1; k < optimized.length; k++) {
+                const newRoute = optimized.slice();
+                const segment = newRoute.slice(i, k).reverse();
+                newRoute.splice(i, k - i, ...segment);
+                const currentDist = optimized.reduce((acc, cur, idx) => {
+                    if (idx === 0) return 0;
+                    return acc + haversine(optimized[idx - 1], cur);
+                }, 0);
+                const newDist = newRoute.reduce((acc, cur, idx) => {
+                    if (idx === 0) return 0;
+                    return acc + haversine(newRoute[idx - 1], cur);
+                }, 0);
+                if (newDist + 1e-6 < currentDist) {
+                    optimized.splice(0, optimized.length, ...newRoute);
+                    improved = true;
+                }
+            }
+        }
+    }
+
     etapes.splice(0, etapes.length, ...optimized);
+    renumberDays();
+}
+
+function renumberDays() {
+    etapes.forEach((e, i) => { e.day = i + 1; });
 }
 
 function saveItinerary() {
@@ -164,6 +201,7 @@ function loadItinerary(data) {
         etape.marker = marker;
         etapes.push(etape);
     });
+    renumberDays();
     updateEtapesList();
     updateItineraire();
 }
@@ -198,6 +236,7 @@ function updateEtapesList() {
         del.onclick = () => {
             etape.marker.remove();
             etapes.splice(index, 1);
+            renumberDays();
             updateEtapesList();
             updateItineraire();
             saveItinerary();
@@ -253,6 +292,7 @@ function updateEtapesList() {
                     });
                 });
                 etapes.splice(0, etapes.length, ...newOrder);
+                renumberDays();
                 updateEtapesList();
                 updateItineraire();
                 autoOptimize = false;
@@ -374,7 +414,7 @@ searchInput.addEventListener('awesomplete-selectcomplete', function(e) {
                 const lat = parseFloat(place.lat);
                 const lon = parseFloat(place.lon);
 
-                const day = parseInt(prompt('Jour de l\'\u00e9tape ?', '1'), 10) || 1;
+                const day = etapes.length + 1;
                 const notes = prompt('Notes date/heure :', '') || '';
 
                 const etape = {
@@ -442,6 +482,17 @@ shareBtn.addEventListener('click', () => {
     const url = new URL(window.location.href);
     url.searchParams.set('trip', encoded);
     prompt('Copiez ce lien pour partager votre itinéraire :', url.toString());
+});
+
+poiToggleBtn.addEventListener('click', () => {
+    poiVisible = !poiVisible;
+    if (poiVisible) {
+        poiMarkers.addTo(map);
+        poiToggleBtn.textContent = 'Masquer les POI';
+    } else {
+        map.removeLayer(poiMarkers);
+        poiToggleBtn.textContent = 'Afficher les POI';
+    }
 });
 
 // Chargement depuis l'URL ou le stockage local
