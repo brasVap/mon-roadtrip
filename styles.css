@@ -142,3 +142,14 @@ aside h2 {
     margin-top: 10px;
     padding: 4px 8px;
 }
+
+/* Styles pour les filtres */
+#category-filters label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+#basemap-select {
+    width: 100%;
+    margin-bottom: 10px;
+}

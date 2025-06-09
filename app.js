@@ -1,12 +1,30 @@
 // app.js complet avec autocomplétion Awesomplete (Roadtrippers-like)
 
-// Initialisation de la carte
-const map = L.map('map').setView([43.6, 3.9], 6);
-
-// Fond de carte OpenStreetMap
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+// Fonds de carte
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
+});
+const satellite = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    { attribution: 'Tiles &copy; Esri' }
+);
+const topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenTopoMap contributors'
+});
+
+// Initialisation de la carte avec OSM par défaut
+const map = L.map('map', { layers: [osm] }).setView([43.6, 3.9], 6);
+
+const baseLayers = { osm, satellite, topo };
+
+function updateBasemap() {
+    Object.values(baseLayers).forEach(l => map.removeLayer(l));
+    const layer = baseLayers[basemapSelect.value] || osm;
+    layer.addTo(map);
+}
+
+basemapSelect.addEventListener('change', updateBasemap);
+updateBasemap();
 
 // Variables globales
 const etapes = [];
@@ -17,31 +35,99 @@ const toggleBtn = document.getElementById('toggle-details');
 const detailsDiv = document.getElementById('details-segments');
 const shareBtn = document.getElementById('share-trip');
 const poiMarkers = L.layerGroup().addTo(map);
+const categoryFiltersDiv = document.getElementById('category-filters');
+const basemapSelect = document.getElementById('basemap-select');
+const categoryLayers = {};
+const categoriesSet = new Set();
+let autoOptimize = true;
 
 // Fonction utilitaire pour charger des POI
+function createCategoryCheckbox(cat) {
+    if (categoryFiltersDiv.querySelector(`input[data-cat="${cat}"]`)) return;
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = true;
+    input.dataset.cat = cat;
+    input.addEventListener('change', updatePOIFilters);
+    label.appendChild(input);
+    label.appendChild(document.createTextNode(' ' + cat));
+    categoryFiltersDiv.appendChild(label);
+}
+
 function loadPOI(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            L.geoJSON(data, {
-                pointToLayer: (feature, latlng) => {
-                    return L.marker(latlng)
-                        .bindPopup(feature.properties.name || 'POI');
+            data.features.forEach(f => {
+                const cat = f.properties.category || 'other';
+                categoriesSet.add(cat);
+                if (!categoryLayers[cat]) {
+                    categoryLayers[cat] = L.layerGroup().addTo(poiMarkers);
                 }
-            }).addTo(poiMarkers);
+                const marker = L.marker([f.geometry.coordinates[1], f.geometry.coordinates[0]])
+                    .bindPopup(f.properties.name || 'POI');
+                categoryLayers[cat].addLayer(marker);
+            });
+            categoriesSet.forEach(createCategoryCheckbox);
+            updatePOIFilters();
         })
         .catch(err => console.error(`Erreur chargement ${url}:`, err));
+}
+
+function updatePOIFilters() {
+    Object.entries(categoryLayers).forEach(([cat, layer]) => {
+        const cb = categoryFiltersDiv.querySelector(`input[data-cat="${cat}"]`);
+        if (cb && cb.checked) {
+            if (!poiMarkers.hasLayer(layer)) poiMarkers.addLayer(layer);
+        } else {
+            if (poiMarkers.hasLayer(layer)) poiMarkers.removeLayer(layer);
+        }
+    });
 }
 
 // Fonction reset POI
 function resetPOI() {
     poiMarkers.clearLayers();
+    categoryFiltersDiv.innerHTML = '';
+    Object.keys(categoryLayers).forEach(k => delete categoryLayers[k]);
+    categoriesSet.clear();
     loadPOI('poi.geojson');
     loadPOI('poi_nationalparks.geojson');
 }
 
 // Chargement initial des POI
 resetPOI();
+
+function haversine(a, b) {
+    const R = 6371;
+    const dLat = (b.lat - a.lat) * Math.PI / 180;
+    const dLon = (b.lon - a.lon) * Math.PI / 180;
+    const lat1 = a.lat * Math.PI / 180;
+    const lat2 = b.lat * Math.PI / 180;
+    const sinDLat = Math.sin(dLat / 2);
+    const sinDLon = Math.sin(dLon / 2);
+    const h = sinDLat * sinDLat + sinDLon * sinDLon * Math.cos(lat1) * Math.cos(lat2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+function optimizeItinerary() {
+    if (!autoOptimize || etapes.length <= 2) return;
+    const remaining = etapes.slice(1);
+    const optimized = [etapes[0]];
+    let current = etapes[0];
+    while (remaining.length) {
+        let best = 0;
+        let bestDist = haversine(current, remaining[0]);
+        for (let i = 1; i < remaining.length; i++) {
+            const d = haversine(current, remaining[i]);
+            if (d < bestDist) { bestDist = d; best = i; }
+        }
+        current = remaining.splice(best, 1)[0];
+        optimized.push(current);
+    }
+    etapes.splice(0, etapes.length, ...optimized);
+}
 
 function saveItinerary() {
     const data = etapes.map(e => ({
@@ -169,6 +255,7 @@ function updateEtapesList() {
                 etapes.splice(0, etapes.length, ...newOrder);
                 updateEtapesList();
                 updateItineraire();
+                autoOptimize = false;
             }
         });
     });
@@ -311,6 +398,7 @@ searchInput.addEventListener('awesomplete-selectcomplete', function(e) {
                 etape.marker = marker;
 
                 etapes.push(etape);
+                optimizeItinerary();
                 updateEtapesList();
                 updateItineraire();
                 saveItinerary();
@@ -335,6 +423,7 @@ resetButton.addEventListener('click', function() {
     map.setView([43.6, 3.9], 6);
     resetPOI();
     localStorage.removeItem('roadtrip');
+    autoOptimize = true;
 });
 
 toggleBtn.addEventListener('click', () => {

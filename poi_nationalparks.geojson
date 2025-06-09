@@ -1,356 +1,985 @@
 {
   "type": "FeatureCollection",
   "features": [
-        {
-      "type": "Feature",
-      "properties": { "name": "Yellowstone National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -110.5885, 44.4280 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Grand Canyon National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -112.1401, 36.0544 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Yosemite National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -119.5383, 37.8651 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Zion National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -113.0263, 37.2982 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Bryce Canyon National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -112.1871, 37.5930 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Arches National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -109.5925, 38.7331 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Rocky Mountain National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -105.7081, 40.3428 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Everglades National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -80.9336, 25.2866 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Statue of Liberty National Monument" },
-      "geometry": { "type": "Point", "coordinates": [ -74.0445, 40.6892 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Devils Tower National Monument" },
-      "geometry": { "type": "Point", "coordinates": [ -104.6995, 44.5902 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Mount Rushmore National Memorial" },
-      "geometry": { "type": "Point", "coordinates": [ -103.4591, 43.8791 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Badlands National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -102.3397, 43.8554 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Glacier National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -113.7180, 48.7596 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Acadia National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -68.2733, 44.3386 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Olympic National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -123.4980, 47.8021 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Grand Teton National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -110.6818, 43.7904 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Great Smoky Mountains National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -83.5379, 35.6532 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Shenandoah National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -78.4369, 38.4921 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Denali National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -150.1056, 63.1148 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Sequoia National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -118.6654, 36.4864 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Kings Canyon National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -118.5550, 36.8879 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Death Valley National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -116.8258, 36.5054 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Joshua Tree National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -115.9010, 33.8734 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Petrified Forest National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -109.7812, 35.0657 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Mesa Verde National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -108.4618, 37.2309 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Canyonlands National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -109.8431, 38.2136 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Capitol Reef National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -111.3743, 38.3670 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Great Basin National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -114.2190, 38.9832 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Crater Lake National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -122.1339, 42.8684 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Lassen Volcanic National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -121.4156, 40.4977 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Redwood National and State Parks" },
-      "geometry": { "type": "Point", "coordinates": [ -124.0000, 41.2132 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Channel Islands National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -119.5000, 34.0069 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Big Bend National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -103.2295, 29.2498 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Carlsbad Caverns National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -104.4459, 32.1479 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Guadalupe Mountains National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -104.8598, 31.9235 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "White Sands National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -106.1656, 32.7791 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Black Canyon of the Gunnison National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -107.7240, 38.5754 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Great Sand Dunes National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -105.5943, 37.7916 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Indiana Dunes National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -87.0604, 41.6533 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Gateway Arch National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -90.1848, 38.6247 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Voyageurs National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -93.0698, 48.4849 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Isle Royale National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -88.5463, 48.1000 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Cuyahoga Valley National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -81.5555, 41.2808 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Hot Springs National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -93.0553, 34.5136 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Mammoth Cave National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -86.0995, 37.1860 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Congaree National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -80.7812, 33.7917 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Dry Tortugas National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -82.8628, 24.6285 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Biscayne National Park" },
-      "geometry": { "type": "Point", "coordinates": [ -80.3310, 25.4824 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Everglades Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -80.9336, 25.2866 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Blue Ridge Parkway Scenic Byway" },
-      "geometry": { "type": "Point", "coordinates": [ -81.0000, 35.6800 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Mather Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -112.1130, 36.0635 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Glacier Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -119.5738, 37.7276 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Clingmans Dome Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -83.4988, 35.5629 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Hurricane Ridge Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -123.4983, 47.9694 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Bear Lake Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -105.6457, 40.3132 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Tunnel View Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -119.6756, 37.7154 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Schoodic Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -68.0621, 44.3371 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Snake River Overlook Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -110.6577, 43.6822 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Green River Overlook Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -109.8883, 38.3972 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Dead Horse Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -109.7409, 38.4785 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Point Imperial Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -111.9586, 36.2751 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Cape Royal Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -111.9569, 36.1625 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Hopi Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -112.1489, 36.0638 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Bryce Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -112.1648, 37.6041 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Sunrise Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -112.1610, 37.6228 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Sunset Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -112.1649, 37.6226 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Inspiration Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -112.1659, 37.6188 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Artist Point Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -110.4573, 44.7156 ] }
-    },
-    {
-      "type": "Feature",
-      "properties": { "name": "Oxbow Bend Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -110.6046, 43.8563 ] }
-    },
     {
       "type": "Feature",
-      "properties": { "name": "Mammoth Hot Springs Scenic View" },
-      "geometry": { "type": "Point", "coordinates": [ -110.7059, 44.9760 ] }
+      "properties": {
+        "name": "Yellowstone National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.5885,
+          44.428
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Grand Canyon National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.1401,
+          36.0544
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yosemite National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.5383,
+          37.8651
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Zion National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -113.0263,
+          37.2982
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bryce Canyon National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.1871,
+          37.593
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Arches National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -109.5925,
+          38.7331
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rocky Mountain National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -105.7081,
+          40.3428
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Everglades National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.9336,
+          25.2866
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Statue of Liberty National Monument",
+        "category": "monument"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.0445,
+          40.6892
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Devils Tower National Monument",
+        "category": "monument"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.6995,
+          44.5902
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Rushmore National Memorial",
+        "category": "memorial"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -103.4591,
+          43.8791
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Badlands National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -102.3397,
+          43.8554
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Glacier National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -113.718,
+          48.7596
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Acadia National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.2733,
+          44.3386
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Olympic National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.498,
+          47.8021
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Grand Teton National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.6818,
+          43.7904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Great Smoky Mountains National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.5379,
+          35.6532
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Shenandoah National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.4369,
+          38.4921
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Denali National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -150.1056,
+          63.1148
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sequoia National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.6654,
+          36.4864
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kings Canyon National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -118.555,
+          36.8879
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Death Valley National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -116.8258,
+          36.5054
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Joshua Tree National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -115.901,
+          33.8734
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Petrified Forest National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -109.7812,
+          35.0657
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mesa Verde National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -108.4618,
+          37.2309
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Canyonlands National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -109.8431,
+          38.2136
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Capitol Reef National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.3743,
+          38.367
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Great Basin National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -114.219,
+          38.9832
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Crater Lake National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.1339,
+          42.8684
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lassen Volcanic National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.4156,
+          40.4977
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Redwood National and State Parks",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -124.0,
+          41.2132
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Channel Islands National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.5,
+          34.0069
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Big Bend National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -103.2295,
+          29.2498
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Carlsbad Caverns National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.4459,
+          32.1479
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Guadalupe Mountains National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -104.8598,
+          31.9235
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "White Sands National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -106.1656,
+          32.7791
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Black Canyon of the Gunnison National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -107.724,
+          38.5754
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Great Sand Dunes National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -105.5943,
+          37.7916
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Indiana Dunes National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.0604,
+          41.6533
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gateway Arch National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1848,
+          38.6247
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Voyageurs National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.0698,
+          48.4849
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Isle Royale National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.5463,
+          48.1
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cuyahoga Valley National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.5555,
+          41.2808
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hot Springs National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -93.0553,
+          34.5136
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mammoth Cave National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.0995,
+          37.186
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Congaree National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.7812,
+          33.7917
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dry Tortugas National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -82.8628,
+          24.6285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Biscayne National Park",
+        "category": "park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.331,
+          25.4824
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Everglades Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.9336,
+          25.2866
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Blue Ridge Parkway Scenic Byway",
+        "category": "scenic_byway"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.0,
+          35.68
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mather Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.113,
+          36.0635
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Glacier Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.5738,
+          37.7276
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Clingmans Dome Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.4988,
+          35.5629
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hurricane Ridge Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -123.4983,
+          47.9694
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bear Lake Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -105.6457,
+          40.3132
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tunnel View Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.6756,
+          37.7154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Schoodic Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0621,
+          44.3371
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Snake River Overlook Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.6577,
+          43.6822
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Green River Overlook Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -109.8883,
+          38.3972
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dead Horse Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -109.7409,
+          38.4785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Point Imperial Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.9586,
+          36.2751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cape Royal Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.9569,
+          36.1625
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hopi Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.1489,
+          36.0638
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bryce Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.1648,
+          37.6041
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sunrise Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.161,
+          37.6228
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sunset Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.1649,
+          37.6226
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Inspiration Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.1659,
+          37.6188
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Artist Point Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.4573,
+          44.7156
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Oxbow Bend Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.6046,
+          43.8563
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mammoth Hot Springs Scenic View",
+        "category": "scenic_view"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.7059,
+          44.976
+        ]
+      }
     }
   ]
 }
-
