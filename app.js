@@ -13,7 +13,26 @@ const etapes = [];
 const etapesList = document.getElementById('etapes-list');
 const searchInput = document.getElementById('search');
 const resetButton = document.getElementById('reset');
+const shareButton = document.getElementById('share');
 const poiMarkers = L.layerGroup().addTo(map);
+
+function saveEtapes() {
+    localStorage.setItem('etapes', JSON.stringify(etapes));
+}
+
+function loadEtapesFromStorage() {
+    const data = localStorage.getItem('etapes');
+    if (data) {
+        try {
+            const parsed = JSON.parse(data);
+            if (Array.isArray(parsed)) {
+                etapes.push(...parsed);
+            }
+        } catch (e) {
+            console.error('Erreur lecture localStorage:', e);
+        }
+    }
+}
 
 // Fonction utilitaire pour charger des POI
 function loadPOI(url) {
@@ -55,6 +74,7 @@ function updateEtapesList() {
             etapes.splice(index, 1);
             updateEtapesList();
             updateItineraire();
+            saveEtapes();
         };
 
         li.appendChild(btn);
@@ -180,6 +200,7 @@ searchInput.addEventListener('awesomplete-selectcomplete', function(e) {
                 etapes.push(etape);
                 updateEtapesList();
                 updateItineraire();
+                saveEtapes();
 
                 map.setView([lat, lon], 12);
                 L.marker([lat, lon]).addTo(map).bindPopup(place.display_name).openPopup();
@@ -199,6 +220,7 @@ resetButton.addEventListener('click', function() {
     updateItineraire();
     map.setView([43.6, 3.9], 6);
     resetPOI();
+    saveEtapes();
 });
 
 // Initialisation de Sortable pour la liste des étapes
@@ -213,5 +235,41 @@ new Sortable(etapesList, {
         });
         etapes.splice(0, etapes.length, ...newOrder);
         updateItineraire();
+        saveEtapes();
     }
+});
+
+function loadFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const data = params.get('data');
+    if (data) {
+        try {
+            const json = decodeURIComponent(atob(data));
+            const parsed = JSON.parse(json);
+            if (Array.isArray(parsed)) {
+                etapes.push(...parsed);
+                return true;
+            }
+        } catch (e) {
+            console.error('Erreur lecture URL:', e);
+        }
+    }
+    return false;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const loaded = loadFromQuery();
+    if (!loaded) {
+        loadEtapesFromStorage();
+    }
+    if (etapes.length > 0) {
+        updateEtapesList();
+        updateItineraire();
+        saveEtapes();
+    }
+});
+
+shareButton.addEventListener('click', () => {
+    const encoded = btoa(encodeURIComponent(JSON.stringify(etapes)));
+    window.location.search = `?data=${encoded}`;
 });
