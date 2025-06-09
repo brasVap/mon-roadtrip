@@ -40,25 +40,91 @@ function resetPOI() {
 // Chargement initial des POI
 resetPOI();
 
-// Fonction pour mettre à jour la liste des étapes
+// Fonction pour mettre à jour la liste des étapes groupées par jour
 function updateEtapesList() {
     etapesList.innerHTML = '';
+    const days = {};
+
     etapes.forEach((etape, index) => {
+        if (!days[etape.day]) {
+            const section = document.createElement('div');
+            section.className = 'day-section';
+            const title = document.createElement('h3');
+            title.textContent = `Jour ${etape.day}`;
+            const ul = document.createElement('ul');
+            ul.dataset.day = etape.day;
+            section.appendChild(title);
+            section.appendChild(ul);
+            etapesList.appendChild(section);
+            days[etape.day] = ul;
+        }
+
         const li = document.createElement('li');
         li.className = 'etape';
-        li.textContent = etape.name;
+        li.dataset.index = index;
+        li.textContent = `${etape.name} - ${etape.notes || ''}`;
 
-        const btn = document.createElement('button');
-        btn.textContent = 'Supprimer';
-        btn.className = 'supprimer';
-        btn.onclick = () => {
+        const del = document.createElement('button');
+        del.textContent = 'Supprimer';
+        del.className = 'supprimer';
+        del.onclick = () => {
+            etape.marker.remove();
             etapes.splice(index, 1);
             updateEtapesList();
             updateItineraire();
         };
 
-        li.appendChild(btn);
-        etapesList.appendChild(li);
+        const prev = document.createElement('button');
+        prev.textContent = '<';
+        prev.className = 'day-nav';
+        prev.onclick = () => {
+            etape.day = Math.max(1, etape.day - 1);
+            updateEtapesList();
+            updateItineraire();
+        };
+
+        const next = document.createElement('button');
+        next.textContent = '>';
+        next.className = 'day-nav';
+        next.onclick = () => {
+            etape.day += 1;
+            updateEtapesList();
+            updateItineraire();
+        };
+
+        const edit = document.createElement('button');
+        edit.textContent = 'Editer';
+        edit.className = 'day-nav';
+        edit.onclick = () => {
+            etape.notes = prompt('Notes date/heure :', etape.notes || '') || '';
+            updateEtapesList();
+        };
+
+        li.appendChild(edit);
+        li.appendChild(prev);
+        li.appendChild(next);
+        li.appendChild(del);
+
+        days[etape.day].appendChild(li);
+    });
+
+    // Activation de Sortable pour chaque jour
+    Object.values(days).forEach(ul => {
+        new Sortable(ul, {
+            animation: 150,
+            onEnd: () => {
+                const newOrder = [];
+                document.querySelectorAll('.day-section ul').forEach(list => {
+                    list.querySelectorAll('li').forEach(li => {
+                        const idx = parseInt(li.dataset.index, 10);
+                        if (!isNaN(idx)) newOrder.push(etapes[idx]);
+                    });
+                });
+                etapes.splice(0, etapes.length, ...newOrder);
+                updateEtapesList();
+                updateItineraire();
+            }
+        });
     });
 }
 
@@ -171,29 +237,46 @@ searchInput.addEventListener('awesomplete-selectcomplete', function(e) {
                 const lat = parseFloat(place.lat);
                 const lon = parseFloat(place.lon);
 
+                const day = parseInt(prompt('Jour de l\'\u00e9tape ?', '1'), 10) || 1;
+                const notes = prompt('Notes date/heure :', '') || '';
+
                 const etape = {
                     name: place.display_name,
                     lat,
-                    lon
+                    lon,
+                    day,
+                    notes,
+                    marker: null
                 };
+
+                const marker = L.marker([lat, lon], { draggable: true }).addTo(map)
+                    .bindPopup(place.display_name);
+                marker.on('dragend', eDrag => {
+                    const ll = eDrag.target.getLatLng();
+                    etape.lat = ll.lat;
+                    etape.lon = ll.lng;
+                    updateItineraire();
+                });
+                etape.marker = marker;
 
                 etapes.push(etape);
                 updateEtapesList();
                 updateItineraire();
 
                 map.setView([lat, lon], 12);
-                L.marker([lat, lon]).addTo(map).bindPopup(place.display_name).openPopup();
+                marker.openPopup();
 
                 searchInput.value = '';
             } else {
-                alert('Lieu non trouvé.');
+                alert('Lieu non trouv\u00e9.');
             }
         })
-        .catch(err => console.error('Erreur ajout étape Nominatim:', err));
+        .catch(err => console.error('Erreur ajout \u00e9tape Nominatim:', err));
 });
 
 // Bouton reset
 resetButton.addEventListener('click', function() {
+    etapes.forEach(e => e.marker.remove());
     etapes.length = 0;
     updateEtapesList();
     updateItineraire();
@@ -201,17 +284,3 @@ resetButton.addEventListener('click', function() {
     resetPOI();
 });
 
-// Initialisation de Sortable pour la liste des étapes
-new Sortable(etapesList, {
-    animation: 150,
-    onEnd: () => {
-        const newOrder = [];
-        etapesList.querySelectorAll('li').forEach(li => {
-            const name = li.firstChild.textContent;
-            const etape = etapes.find(e => e.name === name);
-            if (etape) newOrder.push(etape);
-        });
-        etapes.splice(0, etapes.length, ...newOrder);
-        updateItineraire();
-    }
-});

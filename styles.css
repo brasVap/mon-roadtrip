@@ -63,11 +63,19 @@ aside h2 {
 }
 
 #etapes-list {
+    padding: 0;
+}
+
+.day-section {
+    margin-bottom: 20px;
+}
+
+.day-section ul {
     list-style: none;
     padding: 0;
 }
 
-#etapes-list li {
+.day-section li {
     background-color: #eee;
     margin-bottom: 10px;
     padding: 8px;
@@ -80,7 +88,7 @@ aside h2 {
     height: 100vh;
 }
 
-#etapes-list li button.supprimer {
+.day-section li button.supprimer {
     float: right;
     background-color: #ff4d4d;
     color: white;
@@ -91,7 +99,7 @@ aside h2 {
     cursor: pointer;
 }
 
-#etapes-list li button.supprimer:hover {
+.day-section li button.supprimer:hover {
     background-color: #cc0000;
 }
 
@@ -124,4 +132,8 @@ aside h2 {
     padding: 4px 6px;
     cursor: pointer;
     border-radius: 3px;
+}
+
+.day-nav {
+    margin-left: 5px;
 }
