@@ -121,10 +121,73 @@ function updateItineraire() {
     });
 }
 
-// Gestion recherche + ajout à la liste avec debounce
-let searchTimeout;
-searchInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
+// Code complet pour autocomplétion Awesomplete (Roadtrippers-like)
+
+// Initialisation d'Awesomplete sur le champ #search
+const awesomplete = new Awesomplete(searchInput, {
+    minChars: 2, // commencer à suggérer à partir de 2 caractères
+    maxItems: 10,
+    autoFirst: true
+});
+
+// Fonction de recherche dynamique vers Nominatim (debounce)
+let liveSearchTimeout;
+
+searchInput.addEventListener('input', function() {
+    clearTimeout(liveSearchTimeout);
+    const query = searchInput.value.trim();
+
+    if (query.length < 2) {
+        awesomplete.list = [];
+        return;
+    }
+
+    liveSearchTimeout = setTimeout(() => {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(results => {
+                // Construire une liste de suggestions (nom affiché)
+                const suggestions = results.map(place => place.display_name);
+                awesomplete.list = suggestions;
+            })
+            .catch(err => console.error('Erreur autocomplétion Nominatim:', err));
+    }, 300); // debounce 300ms
+});
+
+// Quand l'utilisateur sélectionne une suggestion
+searchInput.addEventListener('awesomplete-selectcomplete', function(e) {
+    const selectedName = e.text.value;
+
+    // On refait un fetch pour obtenir les coordonnées exactes
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(selectedName)}`)
+        .then(response => response.json())
+        .then(results => {
+            if (results.length > 0) {
+                const place = results[0];
+                const lat = parseFloat(place.lat);
+                const lon = parseFloat(place.lon);
+
+                const etape = {
+                    name: place.display_name,
+                    lat,
+                    lon
+                };
+
+                etapes.push(etape);
+                updateEtapesList();
+                updateItineraire();
+
+                map.setView([lat, lon], 12);
+                L.marker([lat, lon]).addTo(map).bindPopup(place.display_name).openPopup();
+
+                searchInput.value = '';
+            } else {
+                alert('Lieu non trouvé.');
+            }
+        })
+        .catch(err => console.error('Erreur ajout étape Nominatim:', err));
+});
+
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
             const query = searchInput.value.trim();
