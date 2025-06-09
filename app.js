@@ -13,6 +13,9 @@ const etapes = [];
 const etapesList = document.getElementById('etapes-list');
 const searchInput = document.getElementById('search');
 const resetButton = document.getElementById('reset');
+const toggleBtn = document.getElementById('toggle-details');
+const detailsDiv = document.getElementById('details-segments');
+const shareBtn = document.getElementById('share-trip');
 const poiMarkers = L.layerGroup().addTo(map);
 
 // Fonction utilitaire pour charger des POI
@@ -39,6 +42,45 @@ function resetPOI() {
 
 // Chargement initial des POI
 resetPOI();
+
+function saveItinerary() {
+    const data = etapes.map(e => ({
+        name: e.name,
+        lat: e.lat,
+        lon: e.lon,
+        day: e.day,
+        notes: e.notes
+    }));
+    localStorage.setItem('roadtrip', JSON.stringify(data));
+}
+
+function loadItinerary(data) {
+    const trip = data || JSON.parse(localStorage.getItem('roadtrip') || 'null');
+    if (!trip) return;
+    trip.forEach(step => {
+        const etape = {
+            name: step.name,
+            lat: step.lat,
+            lon: step.lon,
+            day: step.day,
+            notes: step.notes,
+            marker: null
+        };
+        const marker = L.marker([step.lat, step.lon], { draggable: true }).addTo(map)
+            .bindPopup(step.name);
+        marker.on('dragend', e => {
+            const ll = e.target.getLatLng();
+            etape.lat = ll.lat;
+            etape.lon = ll.lng;
+            updateItineraire();
+            saveItinerary();
+        });
+        etape.marker = marker;
+        etapes.push(etape);
+    });
+    updateEtapesList();
+    updateItineraire();
+}
 
 // Fonction pour mettre à jour la liste des étapes groupées par jour
 function updateEtapesList() {
@@ -72,6 +114,7 @@ function updateEtapesList() {
             etapes.splice(index, 1);
             updateEtapesList();
             updateItineraire();
+            saveItinerary();
         };
 
         const prev = document.createElement('button');
@@ -81,6 +124,7 @@ function updateEtapesList() {
             etape.day = Math.max(1, etape.day - 1);
             updateEtapesList();
             updateItineraire();
+            saveItinerary();
         };
 
         const next = document.createElement('button');
@@ -90,6 +134,7 @@ function updateEtapesList() {
             etape.day += 1;
             updateEtapesList();
             updateItineraire();
+            saveItinerary();
         };
 
         const edit = document.createElement('button');
@@ -98,6 +143,7 @@ function updateEtapesList() {
         edit.onclick = () => {
             etape.notes = prompt('Notes date/heure :', etape.notes || '') || '';
             updateEtapesList();
+            saveItinerary();
         };
 
         li.appendChild(edit);
@@ -126,6 +172,7 @@ function updateEtapesList() {
             }
         });
     });
+    saveItinerary();
 }
 
 // updateItineraire() avec TA clé ORS
@@ -134,7 +181,8 @@ let itineraireLayer = null;
 
 function updateItineraire() {
     if (etapes.length < 2) {
-        document.getElementById('itineraire-info').innerHTML = '<p>Ajoutez au moins 2 étapes pour calculer l’itinéraire.</p>';
+        document.getElementById('itineraire-info').innerHTML = '<p>Ajoutez au moins 2 étapes pour calculer l\u2019itinéraire.</p>';
+        detailsDiv.innerHTML = '';
         if (itineraireLayer) {
             map.removeLayer(itineraireLayer);
             itineraireLayer = null;
@@ -173,6 +221,8 @@ function updateItineraire() {
         document.getElementById('itineraire-info').innerHTML = `
             <p><strong>Distance totale :</strong> ${distanceKm.toFixed(1)} km</p>
             <p><strong>Durée totale :</strong> ${Math.round(dureeMin)} min</p>
+        `;
+        detailsDiv.innerHTML = `
             <h3>Détail par segment :</h3>
             <ul>
                 ${data.features[0].properties.segments.map((segment, i) => `
@@ -256,12 +306,14 @@ searchInput.addEventListener('awesomplete-selectcomplete', function(e) {
                     etape.lat = ll.lat;
                     etape.lon = ll.lng;
                     updateItineraire();
+                    saveItinerary();
                 });
                 etape.marker = marker;
 
                 etapes.push(etape);
                 updateEtapesList();
                 updateItineraire();
+                saveItinerary();
 
                 map.setView([lat, lon], 12);
                 marker.openPopup();
@@ -282,5 +334,40 @@ resetButton.addEventListener('click', function() {
     updateItineraire();
     map.setView([43.6, 3.9], 6);
     resetPOI();
+    localStorage.removeItem('roadtrip');
+});
+
+toggleBtn.addEventListener('click', () => {
+    if (detailsDiv.style.display === 'none') {
+        detailsDiv.style.display = 'block';
+        toggleBtn.textContent = 'Masquer les détails';
+    } else {
+        detailsDiv.style.display = 'none';
+        toggleBtn.textContent = 'Afficher les détails';
+    }
+});
+
+shareBtn.addEventListener('click', () => {
+    const data = etapes.map(({name, lat, lon, day, notes}) => ({name, lat, lon, day, notes}));
+    const encoded = btoa(JSON.stringify(data));
+    const url = new URL(window.location.href);
+    url.searchParams.set('trip', encoded);
+    prompt('Copiez ce lien pour partager votre itinéraire :', url.toString());
+});
+
+// Chargement depuis l'URL ou le stockage local
+window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const tripParam = params.get('trip');
+    if (tripParam) {
+        try {
+            const decoded = JSON.parse(atob(tripParam));
+            loadItinerary(decoded);
+        } catch (e) {
+            console.error('Impossible de charger l\u2019itinéraire partagé:', e);
+        }
+    } else {
+        loadItinerary();
+    }
 });
 

@@ -137,3 +137,8 @@ aside h2 {
 .day-nav {
     margin-left: 5px;
 }
+
+#share-trip {
+    margin-top: 10px;
+    padding: 4px 8px;
+}
