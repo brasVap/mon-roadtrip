@@ -146,7 +146,13 @@ searchInput.addEventListener('input', function() {
         fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(results => {
-                const suggestions = results.map(place => place.display_name);
+                const suggestions = results.map(place => {
+    const parts = place.display_name.split(',').map(p => p.trim());
+    const ville = parts[0] || '';
+    const region = parts[parts.length - 2] || '';
+    const pays = parts[parts.length - 1] || '';
+    return `${ville}, ${region}, ${pays}`;
+});
                 awesomplete.list = suggestions;
             })
             .catch(err => console.error('Erreur autocomplétion Nominatim:', err));
