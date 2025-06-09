@@ -125,3 +125,40 @@ aside h2 {
     cursor: pointer;
     border-radius: 3px;
 }
+
+#poi-controls {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#poi-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#poi-list li {
+    background: #eee;
+    margin: 5px 0;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#poi-list li button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 4px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#poi-list li button:hover {
+    background: #3e8e41;
+}

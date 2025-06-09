@@ -14,6 +14,32 @@ const etapesList = document.getElementById('etapes-list');
 const searchInput = document.getElementById('search');
 const resetButton = document.getElementById('reset');
 const poiMarkers = L.layerGroup().addTo(map);
+const poiList = document.getElementById('poi-list');
+const toggleHotels = document.getElementById('toggle-hotels');
+const toggleRestaurants = document.getElementById('toggle-restaurants');
+const toggleAttractions = document.getElementById('toggle-attractions');
+
+const hotelsLayer = L.layerGroup();
+const restaurantsLayer = L.layerGroup();
+const attractionsLayer = L.layerGroup();
+
+if (toggleHotels && toggleHotels.checked) hotelsLayer.addTo(map);
+if (toggleRestaurants && toggleRestaurants.checked) restaurantsLayer.addTo(map);
+if (toggleAttractions && toggleAttractions.checked) attractionsLayer.addTo(map);
+
+function updateLayerToggle(layer, checkbox) {
+    checkbox.addEventListener('change', e => {
+        if (e.target.checked) {
+            layer.addTo(map);
+        } else {
+            map.removeLayer(layer);
+        }
+    });
+}
+
+if (toggleHotels) updateLayerToggle(hotelsLayer, toggleHotels);
+if (toggleRestaurants) updateLayerToggle(restaurantsLayer, toggleRestaurants);
+if (toggleAttractions) updateLayerToggle(attractionsLayer, toggleAttractions);
 
 // Fonction utilitaire pour charger des POI
 function loadPOI(url) {
@@ -33,6 +59,10 @@ function loadPOI(url) {
 // Fonction reset POI
 function resetPOI() {
     poiMarkers.clearLayers();
+    hotelsLayer.clearLayers();
+    restaurantsLayer.clearLayers();
+    attractionsLayer.clearLayers();
+    if (poiList) poiList.innerHTML = '';
     loadPOI('poi.geojson');
     loadPOI('poi_nationalparks.geojson');
 }
@@ -60,6 +90,61 @@ function updateEtapesList() {
         li.appendChild(btn);
         etapesList.appendChild(li);
     });
+}
+
+function addPOIToList(name, lat, lon) {
+    if (!poiList) return;
+    const li = document.createElement('li');
+    li.textContent = name;
+    const btn = document.createElement('button');
+    btn.textContent = 'Ajouter à l\u2019itin\u00e9raire';
+    btn.onclick = () => {
+        const etape = { name, lat, lon };
+        etapes.push(etape);
+        updateEtapesList();
+        updateItineraire();
+    };
+    li.appendChild(btn);
+    poiList.appendChild(li);
+}
+
+function fetchCategoryPOI(key, value, bbox, layer) {
+    const query = `[out:json][timeout:25];(node["${key}"="${value}"](${bbox});way["${key}"="${value}"](${bbox});relation["${key}"="${value}"](${bbox}););out center;`;
+    fetch('https://overpass-api.de/api/interpreter', {
+        method: 'POST',
+        body: query
+    })
+    .then(r => r.json())
+    .then(data => {
+        layer.clearLayers();
+        data.elements.forEach(el => {
+            const lat = el.lat || (el.center && el.center.lat);
+            const lon = el.lon || (el.center && el.center.lon);
+            if (lat && lon) {
+                const nom = (el.tags && el.tags.name) ? el.tags.name : value;
+                L.marker([lat, lon]).addTo(layer).bindPopup(nom);
+                addPOIToList(nom, lat, lon);
+            }
+        });
+    })
+    .catch(err => console.error('Erreur chargement POI', value, err));
+}
+
+function fetchPOIsForRoute(geometry) {
+    if (!geometry || !geometry.coordinates) return;
+    if (poiList) poiList.innerHTML = '';
+    let minLat = 90, minLon = 180, maxLat = -90, maxLon = -180;
+    geometry.coordinates.forEach(coord => {
+        const [lon, lat] = coord;
+        if (lat < minLat) minLat = lat;
+        if (lon < minLon) minLon = lon;
+        if (lat > maxLat) maxLat = lat;
+        if (lon > maxLon) maxLon = lon;
+    });
+    const bbox = `${minLat},${minLon},${maxLat},${maxLon}`;
+    fetchCategoryPOI('tourism', 'hotel', bbox, hotelsLayer);
+    fetchCategoryPOI('amenity', 'restaurant', bbox, restaurantsLayer);
+    fetchCategoryPOI('tourism', 'attraction', bbox, attractionsLayer);
 }
 
 // updateItineraire() avec TA clé ORS
@@ -114,6 +199,8 @@ function updateItineraire() {
                 `).join('')}
             </ul>
         `;
+
+        fetchPOIsForRoute(data.features[0].geometry);
     })
     .catch(err => {
         console.error('Erreur calcul itinéraire:', err);
